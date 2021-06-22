@@ -59,3 +59,6 @@ docker-compose up -d
 
 # docker login -u gubr xreasy-db-lnx.cisco.com
 # password is cisco@123
+
+#  to list avaliable repository
+# curl -ik --user gubr:cisco@123 https://xreasy-db-lnx.cisco.com/v2/_catalog
