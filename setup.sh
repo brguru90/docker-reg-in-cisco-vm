@@ -63,3 +63,7 @@ docker-compose up -d
 #  to list avaliable repository
 # https://docs.docker.com/registry/spec/api/
 # curl -ik --user gubr:cisco@123 https://xreasy-db-lnx.cisco.com/v2/_catalog
+
+# docker ps
+# docker image tag configs_mysqldb xreasy-db-lnx.cisco.com/mysqldb
+# docker push xreasy-db-lnx.cisco.com/mysqldb
