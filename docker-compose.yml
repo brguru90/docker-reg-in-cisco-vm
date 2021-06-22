@@ -1,0 +1,50 @@
+version: '3'
+services:
+#Registry
+  registry:
+    image: registry:2
+    restart: always
+    ports:
+    - "5000:5000"
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.passwd
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+      # REGISTRY_HTTP_TLS_CERTIFICATE: /auth/domain.crt
+      # REGISTRY_HTTP_TLS_KEY: /auth/domain.key
+      HTTP_PROXY: http://proxy-wsa.esl.cisco.com:80
+      HTTPS_PROXY: http://proxy-wsa.esl.cisco.com:80
+      NO_PROXY: ".cisco.com,127.0.0.1,localhost,192.168.0.1"
+      http_proxy: http://proxy-wsa.esl.cisco.com:80
+      https_proxy: http://proxy-wsa.esl.cisco.com:80
+      no_proxy: ".cisco.com,127.0.0.1,localhost,192.168.0.1"
+    volumes:
+      - registrydata:/data
+      - ./auth:/auth
+    networks:
+      - mynet
+#Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - mynet
+    depends_on:
+      - registry
+#Docker Networks
+networks:
+  mynet:
+    driver: bridge
+#Volumes
+volumes:
+  registrydata:
+    driver: local

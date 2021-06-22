@@ -1,0 +1,5 @@
+/auth/*
+/nginx/ssl/*
+
+*.key
+*.crt
