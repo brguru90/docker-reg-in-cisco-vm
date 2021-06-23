@@ -11,8 +11,8 @@ services:
       REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.passwd
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
-      REGISTRY_HTTP_TLS_CERTIFICATE: /auth/domain.crt
-      REGISTRY_HTTP_TLS_KEY: /auth/domain.key
+      # REGISTRY_HTTP_TLS_CERTIFICATE: /auth/domain.crt
+      # REGISTRY_HTTP_TLS_KEY: /auth/domain.key
       HTTP_PROXY: http://proxy-wsa.esl.cisco.com:80
       HTTPS_PROXY: http://proxy-wsa.esl.cisco.com:80
       NO_PROXY: ".cisco.com,127.0.0.1,localhost,192.168.0.1"
