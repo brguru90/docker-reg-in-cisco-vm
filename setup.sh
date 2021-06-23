@@ -1,9 +1,22 @@
 # registry server side
 
-reg_path="./auth/registry.passwd"
+full_path=$(realpath $0)
+cur_dir=$(dirname $full_path)
+cd $cur_dir
 
+pwd
+
+mkdir -p ./nginx/ssl/
+touch ./nginx/ssl/private.key
+touch ./nginx/ssl/selfsigned.crt
+touch ./nginx/ssl/public.key
+chmod 770 nginx ./nginx/ssl
+python3 key_gen.py
+
+
+reg_path="./auth/registry.passwd"
 if ! test -f "$reg_path"; then
-    cd auth
+    mkdir -p ./auth && cd auth
     htpasswd -Bc registry.passwd gubr
     cd ..
 fi
@@ -14,12 +27,21 @@ mkdir -p /etc/docker/certs.d/xreasy-db-lnx.cisco.com/
 
 rm -f /etc/docker/certs.d/xreasy-db-lnx.cisco.com/*
 
-
+if ! openssl version | grep -q "1.1.1";
+then
+    openssl req \
+    -newkey rsa:4096 -nodes -sha256 -keyout /etc/docker/certs.d/xreasy-db-lnx.cisco.com/domain.key \
+    -x509 -days 365 -out /etc/docker/certs.d/xreasy-db-lnx.cisco.com/domain.crt
+else
+    
 openssl req \
   -newkey rsa:4096 -nodes -sha256 -keyout /etc/docker/certs.d/xreasy-db-lnx.cisco.com/domain.key \
   -addext "subjectAltName = DNS:xreasy-db-lnx.cisco.com" \
   -subj '/C=IN/ST=KARNTAKA/L=Banglore/O=Ciscoy/OU=XReasyOnBoard/CN=xreasy-db-lnx.cisco.com' \
   -x509 -days 365 -out /etc/docker/certs.d/xreasy-db-lnx.cisco.com/domain.crt
+fi
+
+
 
 cp /etc/docker/certs.d/xreasy-db-lnx.cisco.com/* ./auth/ -f
 
@@ -43,11 +65,14 @@ echo '
         }
     ' > /etc/docker/daemon.json
 
+tree ./
+
 systemctl restart docker
 
 docker-compose stop
 docker-compose down
 docker-compose up -d
+
 
 
 # client side
