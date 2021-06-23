@@ -10,7 +10,6 @@ mkdir -p ./nginx/ssl/
 touch ./nginx/ssl/private.key
 touch ./nginx/ssl/selfsigned.crt
 touch ./nginx/ssl/public.key
-chmod 770 nginx ./nginx/ssl
 python3 key_gen.py
 
 
@@ -47,7 +46,7 @@ cp /etc/docker/certs.d/xreasy-db-lnx.cisco.com/* ./auth/ -f
 
 # cp ./nginx/ssl/selfsigned.crt /etc/docker/certs.d/xreasy-db-lnx.cisco.com/
 
-
+chmod 777 -R ./
 
 mkdir -p /usr/share/ca-certificates/extra/
 mkdir -p /usr/local/share/ca-certificates/
